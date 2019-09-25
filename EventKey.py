@@ -12,6 +12,7 @@ def handle_key(player):
     if key.lalt and key.vk == libtcod.KEY_ENTER:
         libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
 
+    # gen new map
     if key.vk == libtcod.KEY_TAB:
         return 2
 

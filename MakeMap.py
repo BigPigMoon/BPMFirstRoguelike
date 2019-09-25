@@ -7,13 +7,20 @@ from Constants import MIN_ROOM, MAX_ROOM, MAX_ROOM_HEIGHT, MAX_ROOM_WIDTH,\
 
 
 def dig_tile(map, x, y):
+    """Расскапывает тайл.
+    
+    args:
+        map -- карта, матрица для тайлов
+        x -- координата тайла по x
+        y -- координата тайла по y
+    """
     map[x][y].blocked = False
     map[x][y].char = '.'
     map[x][y].color = color_dark_ground
 
 
 def create_room():
-    """Создает комнату с рандомными размерами"""
+    """Создает комнату с рандомными размерами."""
     rnd = 0
     w = libtcod.random_get_int(rnd, MIN_ROOM_WIDTH, MAX_ROOM_WIDTH)
     h = libtcod.random_get_int(rnd, MIN_ROOM_HEIGHT, MAX_ROOM_HEIGHT)
@@ -25,7 +32,7 @@ def create_room():
 
 
 def create_rooms():
-    """Создает список комнат которые НЕ МОГУТ пересекаться друг с другом"""
+    """Создает список комнат которые НЕ МОГУТ пересекаться друг с другом."""
     x = 0
     rooms = [create_room()]
     while x < libtcod.random_get_int(0, MIN_ROOM, MAX_ROOM):
@@ -43,7 +50,7 @@ def create_rooms():
 
 
 def dig_rooms(map):
-    """Выкапывает комнаты на основе списка комнат
+    """Выкапывает комнаты на основе списка комнат.
 
     args:
         map -- карта где надо копаться
@@ -58,7 +65,7 @@ def dig_rooms(map):
 
 
 def make_map():
-    """Создает играбельную карту"""
+    """Создает играбельную карту."""
     map = [[Tile(blocked=True, explore=False, view=True, char='#', color=color_dark_wall)
             for y in range(MAP_HEIGHT)] for x in range(MAP_WIDTH)]
     map = dig_rooms(map)
@@ -68,16 +75,39 @@ def make_map():
 
 
 def dig_h_tonel(map, x1, x2, y):
+    """Выкапывает горизонтальный тонель в карте.
+    
+    args:
+        map -- карта, матрица для тайлов
+        x1 -- начало тонеля
+        x2 -- конец тонеля
+        y -- "глубина"
+        """
     for x in range(min(x1, x2), max(x1, x2) + 1):
         dig_tile(map, x, y)
 
 
 def dig_v_tonel(map, y1, y2, x):
+    """Выкапывает вертикальный тонель в карте.
+    
+    args:
+        map -- "Ну ты серьезно"
+        y1 -- начало тонеля
+        y2 -- конец тонеля
+        x -- "глубина" тонеля
+        """
     for y in range(min(y1, y2), max(y1, y2) + 1):
         dig_tile(map, x, y)
 
 
 def dig_tonnels(rooms, map):
+    """Прокапывает тонели в карте от комнаты к комнате,
+        тонели г-образной формы.
+        
+    args:
+        rooms -- список всех комнат
+        map -- карта, матрица для тайлов
+    """
     for i in range(-1, len(rooms)-1):
         prew_room = rooms[i]
         prew_x, prew_y = prew_room.center()
