@@ -42,13 +42,13 @@ def create_rooms():
     return rooms
 
 
-def dig_rooms(rooms, map):
+def dig_rooms(map):
     """Выкапывает комнаты на основе списка комнат
 
     args:
-        rooms -- список комнат
         map -- карта где надо копаться
     """
+    rooms = create_rooms()
     for room in rooms:
         for y in range(min(room.y1, room.y2), max(room.y1, room.y2)):
             for x in range(min(room.x1, room.x2), max(room.x1, room.x2)):
@@ -61,9 +61,8 @@ def make_map():
     """Создает играбельную карту"""
     map = [[Tile(blocked=True, explore=False, view=True, char='#', color=color_dark_wall)
             for y in range(MAP_HEIGHT)] for x in range(MAP_WIDTH)]
-    rooms = create_rooms()
-    map = dig_rooms(rooms, map)
-    #map = dig_tonnel(rooms, map)
+    map = dig_rooms(map)
+    #map = dig_tonnels(rooms, map)
 
     return map
 
@@ -78,7 +77,7 @@ def dig_v_tonel(map, y1, y2, x):
         dig_tile(map, x, y)
 
 
-def dig_tonnel(rooms, map):
+def dig_tonnels(rooms, map):
     for i in range(-1, len(rooms)-1):
         prew_room = rooms[i]
         prew_x, prew_y = prew_room.center()
