@@ -6,6 +6,79 @@ from Constants import MIN_ROOM, MAX_ROOM, MAX_ROOM_HEIGHT, MAX_ROOM_WIDTH,\
                       color_dark_ground, color_dark_wall
 
 
+def choise_wall(direct, room):
+    """Выбирает комнату в зависимости от направления.
+
+    args:
+        direct -- направление выбора стены
+        room -- комната в которой набо выбирать
+
+    return:
+        wall -- список со списком координат и одной координатой.
+        Если не задать направления вернет None.
+        
+    схема направления
+          1
+          |
+       4--.--2
+          |
+          3
+    """
+    x1 = room.x1
+    x2 = room.x2
+    y1 = room.y1
+    y2 = room.y2
+    
+    if direct == "UP" or direct == 1:
+        wall = [[x for x in range(min(x1, x2), max(x1, x2))], y1]
+    elif direct == "DOWN" or direct == 3:
+        wall = [[x for x in range(min(x1, x2), max(x1, x2))], y2]
+    elif direct == "LEFT" or direct == 4:
+        wall = [x1, [y for y in range(min(y1, y2), max(y1, y2))]]
+    elif direct == "RIGHT" or direct == 2:
+        wall = [x1, [y for y in range(min(y1, y2), max(y1, y2))]]
+    else:
+        print("oops, change true direction")
+        return
+
+    return wall
+
+def scan_wall(direct, coords, depth, map):
+    """Сканирует стену в глубину для новой комнаты, тунеля и пр.
+    
+    args:
+        deriect -- направление для сканирования
+        coords -- список координат для сканирования
+        depth -- глубина сканирования
+        map -- карта для сканирования
+
+    return:
+        clear -- чисто или нет(true or false)
+    """
+    # TODO дописать скан для остальных направлений.
+
+    if coords is not None:
+        if direct == "UP" or direct == 1:
+            y = coords[1]
+            for x in coords[0]:
+                for yd in range(1, depth):
+                    # ???
+                    if not map[x][y-yd].blocked:
+                    #if map[x][y-yd].blocked == False:
+                        return False
+            
+            return True
+        elif direct == "RIGHT" or direct == 2:
+            pass
+        elif direct == "DOWN" or direct == 3:
+            pass
+        elif direct == "LEFT" or direct == 4:
+            pass
+    else:
+        print("oops, your coordinates is None.")
+        return
+
+
 def dig_tile(map, x, y):
     """Расскапывает тайл.
     
@@ -32,7 +105,11 @@ def create_room():
 
 
 def create_rooms():
-    """Создает список комнат которые НЕ МОГУТ пересекаться друг с другом."""
+    """Создает список комнат которые НЕ МОГУТ пересекаться друг с другом.
+    
+    return:
+        rooms -- список комнат
+    """
     x = 0
     rooms = [create_room()]
     while x < libtcod.random_get_int(0, MIN_ROOM, MAX_ROOM):
@@ -54,6 +131,9 @@ def dig_rooms(map):
 
     args:
         map -- карта где надо копаться
+
+    return:
+        map -- измененная карта
     """
     rooms = create_rooms()
     for room in rooms:
@@ -65,9 +145,14 @@ def dig_rooms(map):
 
 
 def make_map():
-    """Создает играбельную карту."""
-    map = [[Tile(blocked=True, explore=False, view=True, char='#', color=color_dark_wall)
-            for y in range(MAP_HEIGHT)] for x in range(MAP_WIDTH)]
+    """Создает играбельную карту.
+    
+    return:
+        map -- измененная карта
+    """
+    map = [[Tile(blocked=True, explore=False, view=True, char='#', 
+                 color=color_dark_wall)
+                 for y in range(MAP_HEIGHT)] for x in range(MAP_WIDTH)]
     map = dig_rooms(map)
     #map = dig_tonnels(rooms, map)
 
@@ -107,6 +192,9 @@ def dig_tonnels(rooms, map):
     args:
         rooms -- список всех комнат
         map -- карта, матрица для тайлов
+
+    return:
+        map -- измененная карта
     """
     for i in range(-1, len(rooms)-1):
         prew_room = rooms[i]
