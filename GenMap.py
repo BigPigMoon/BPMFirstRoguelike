@@ -129,3 +129,9 @@ def create_room():
 
     room = Rect(x, y, w, h)
     return room
+
+
+#TODO написать генератор тунелей во все стороны
+def create_tonel()
+#TODO написать генератор окружностей
+#TODO написать генератор абстрактной хуйни

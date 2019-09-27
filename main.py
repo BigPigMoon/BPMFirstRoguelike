@@ -3,7 +3,6 @@ import libtcodpy as libtcod
 from Player import *
 from EventKey import *
 from Constants import MAP_HEIGHT, MAP_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH
-from MakeMap import make_map
 
 
 def render_map(map):
@@ -34,7 +33,6 @@ libtcod.console_set_custom_font('Font/font2.png',
 libtcod.console_init_root(SCREEN_WIDTH, SCREEN_HEIGHT, "FirstRogue")
 con = libtcod.console_new(SCREEN_WIDTH, SCREEN_HEIGHT)
 
-map = make_map()
 player = Player(con, 50, 20, '@', libtcod.white)
 player.set_map(map)
 
@@ -53,6 +51,3 @@ while not libtcod.console_is_window_closed():
     exit = handle_key(player)
     if exit is True:
         break
-
-    if exit == 2:
-        map = make_map()
