@@ -57,8 +57,6 @@ def scan_wall(direct, coords, depth, map):
     return:
         clear -- чисто или нет(true or false)
     """
-    # TODO дописать скан для остальных направлений.
-
     if coords is not None:
         if direct == "UP" or direct == 1:
             y = coords[1]
@@ -243,7 +241,7 @@ def dig_tonnels(rooms, map):
 
     return map
 
-# TODO написать тест для скана
+
 def test_scan_wall1():
     """
     ##############
