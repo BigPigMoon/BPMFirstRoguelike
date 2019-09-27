@@ -1,4 +1,5 @@
 import libtcodpy as libtcod
+
 from Rect import *
 from Tile import *
 from Constants import MIN_ROOM, MAX_ROOM, MAX_ROOM_HEIGHT, MAX_ROOM_WIDTH,\
@@ -36,12 +37,13 @@ def choise_wall(direct, room):
     elif direct == "LEFT" or direct == 4:
         wall = [x1, [y for y in range(min(y1, y2), max(y1, y2))]]
     elif direct == "RIGHT" or direct == 2:
-        wall = [x1, [y for y in range(min(y1, y2), max(y1, y2))]]
+        wall = [x2, [y for y in range(min(y1, y2), max(y1, y2))]]
     else:
         print("oops, change true direction")
         return
 
     return wall
+
 
 def scan_wall(direct, coords, depth, map):
     """Сканирует стену в глубину для новой комнаты, тунеля и пр.
@@ -68,12 +70,39 @@ def scan_wall(direct, coords, depth, map):
                         return False
             
             return True
+
         elif direct == "RIGHT" or direct == 2:
-            pass
+            x = coords[0]
+            for y in coords[1]:
+                for xd in range(1, depth):
+                    # ???
+                    if not map[x+xd][y].blocked:
+                    #if map[x][y-yd].blocked == False:
+                        return False
+            
+            return True
+
         elif direct == "DOWN" or direct == 3:
-            pass
+            y = coords[1]
+            for x in coords[0]:
+                for yd in range(1, depth):
+                    # ???
+                    if not map[x][y+yd].blocked:
+                    #if map[x][y-yd].blocked == False:
+                        return False
+            
+            return True
+
         elif direct == "LEFT" or direct == 4:
-            pass
+            x = coords[0]
+            for y in coords[1]:
+                for xd in range(1, depth):
+                    # ???
+                    if not map[x-xd][y].blocked:
+                    #if map[x][y-yd].blocked == False:
+                        return False
+            
+            return True
     else:
         print("oops, your coordinates is None.")
         return
@@ -126,7 +155,7 @@ def create_rooms():
     return rooms
 
 
-def dig_rooms(map):
+def dig_rooms(map, rooms=None):
     """Выкапывает комнаты на основе списка комнат.
 
     args:
@@ -135,7 +164,9 @@ def dig_rooms(map):
     return:
         map -- измененная карта
     """
-    rooms = create_rooms()
+    if rooms is None:
+        rooms = create_rooms()
+
     for room in rooms:
         for y in range(min(room.y1, room.y2), max(room.y1, room.y2)):
             for x in range(min(room.x1, room.x2), max(room.x1, room.x2)):
@@ -211,3 +242,164 @@ def dig_tonnels(rooms, map):
             dig_h_tonel(map, prew_x, new_x, new_y)
 
     return map
+
+# TODO написать тест для скана
+def test_scan_wall1():
+    """
+    ##############
+    ###........###
+    ###........###
+    ###........###
+    ###........###
+    ##############
+    ##############
+    ###........###
+    ###........###
+    ###........###
+    ###........###
+    ##############
+    """
+    map = [[Tile(blocked=True, explore=False, view=True, char='#', 
+                 color=color_dark_wall)
+                 for y in range(12)] for x in range(14)]
+
+    rooms = [Rect(3, 1, 8, 4), Rect(3, 7, 8, 4)]
+    map = dig_rooms(map, rooms)
+    wall = choise_wall(1, rooms[1])
+
+    assert not scan_wall(1, wall, 5, map)
+
+def test_scan_wall2():
+    """
+    ##############
+    ###........###
+    ###........###
+    ###........###
+    ###........###
+    ##############
+    ##############
+    ###........###
+    ###........###
+    ###........###
+    ###........###
+    ##############
+    """
+    level = [[Tile(blocked=True, explore=False, view=True, char='#', color=color_dark_wall) for y in range(12)] for x in range(14)]
+    
+    rooms = [Rect(3, 1, 8, 4), Rect(3, 7, 8, 4)]
+    level = dig_rooms(level, rooms)
+    wall = choise_wall("DOWN", rooms[0])
+
+    assert not scan_wall("DOWN", wall, 5, level)
+
+def test_scan_wall3():
+    """
+    ##############
+    ##############
+    ##############
+    ##############
+    ##############
+    ##############
+    ##############
+    ###........###
+    ###........###
+    ###........###
+    ###........###
+    ##############
+    """
+    map = [[Tile(blocked=True, explore=False, view=True, char='#', 
+                 color=color_dark_wall)
+                 for y in range(12)] for x in range(14)]
+
+    rooms = [Rect(0, 0, 0, 0), Rect(3, 7, 8, 4)]
+    map = dig_rooms(map, rooms)
+    wall = choise_wall(1, rooms[1])
+
+    assert scan_wall(1, wall, 5, map)
+
+def test_scan_wall4():
+    """
+    ##############
+    ###........###
+    ###........###
+    ###........###
+    ###........###
+    ##############
+    ##############
+    ##############
+    ##############
+    ##############
+    ##############
+    ##############
+    """
+    level = [[Tile(blocked=True, explore=False, view=True, char='#', color=color_dark_wall) for y in range(12)] for x in range(14)]
+    
+    rooms = [Rect(3, 1, 8, 4), Rect(0, 0, 0, 0)]
+    level = dig_rooms(level, rooms)
+    wall = choise_wall("DOWN", rooms[0])
+
+    assert scan_wall("DOWN", wall, 5, level)
+
+def test_scan_wall5():
+    """
+    ##############
+    #.....###....#
+    #.....###....#
+    #.....###....#
+    ##############
+    """
+    level = [[Tile(blocked=True, explore=False, view=True, char='#', color=color_dark_wall) for y in range(5)] for x in range(14)]
+    
+    rooms = [Rect(1, 1, 5, 3), Rect(9, 1, 4, 3)]
+    level = dig_rooms(level, rooms)
+    wall = choise_wall("RIGHT", rooms[0])
+
+    assert not scan_wall("RIGHT", wall, 5, level)
+
+def test_scan_wall6():
+    """
+    ##############
+    #.....###....#
+    #.....###....#
+    #.....###....#
+    ##############
+    """
+    level = [[Tile(blocked=True, explore=False, view=True, char='#', color=color_dark_wall) for y in range(5)] for x in range(14)]
+    
+    rooms = [Rect(1, 1, 5, 3), Rect(9, 1, 4, 3)]
+    level = dig_rooms(level, rooms)
+    wall = choise_wall("LEFT", rooms[1])
+
+    assert not scan_wall("LEFT", wall, 5, level)
+
+def test_scan_wall7():
+    """
+    ##############
+    #.....########
+    #.....########
+    #.....########
+    ##############
+    """
+    level = [[Tile(blocked=True, explore=False, view=True, char='#', color=color_dark_wall) for y in range(5)] for x in range(14)]
+    
+    rooms = [Rect(1, 1, 5, 3)]
+    level = dig_rooms(level, rooms)
+    wall = choise_wall("RIGHT", rooms[0])
+
+    assert scan_wall("RIGHT", wall, 5, level)
+
+def test_scan_wall8():
+    """
+    ##############
+    #########....#
+    #########....#
+    #########....#
+    ##############
+    """
+    level = [[Tile(blocked=True, explore=False, view=True, char='#', color=color_dark_wall) for y in range(5)] for x in range(14)]
+    
+    rooms = [Rect(9, 1, 5, 3)]
+    level = dig_rooms(level, rooms)
+    wall = choise_wall("LEFT", rooms[0])
+
+    assert scan_wall("LEFT", wall, 5, level)

@@ -2,8 +2,8 @@ import libtcodpy as libtcod
 
 from Player import *
 from EventKey import *
-from MakeMap import make_map
 from Constants import MAP_HEIGHT, MAP_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH
+from MakeMap import make_map
 
 
 def render_map(map):
