@@ -10,12 +10,15 @@ MAP_HEIGHT = 50
 
 MAX_ROOM = 18
 MIN_ROOM = 12
+
 MIN_ROOM_WIDTH = 6
 MAX_ROOM_WIDTH = 10
+
 MIN_ROOM_HEIGHT = 5
 MAX_ROOM_HEIGHT = 10
 
+MIN_TONEL_WIDTH = 1
+MAX_TONEL_WIDTH = 10
 
-# COLOR
-color_dark_wall = libtcod.Color(0, 0, 100)
-color_dark_ground = libtcod.Color(50, 50, 150)
+MIN_TONEL_HEIGHT = 1
+MAX_TONEL_HEIGHT = 10

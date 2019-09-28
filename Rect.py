@@ -7,12 +7,6 @@ class Rect:
         self.y1 = y
         self.x2 = w + x
         self.y2 = h + y
-        
-        # wall
-        self.up = [i for i in range(x, w)]
-        self.down = 0
-        self.left = 0
-        self.right = 0
 
     def intersect(self, other):
         """Проверка исключений."""
