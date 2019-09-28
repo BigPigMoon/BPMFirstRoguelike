@@ -1,9 +1,9 @@
 import libtcodpy as libtcod
 
-#from Player import *
 import Player
 import EventKey as event
 import Constants as const
+import LevelGen.MakeLevel as levelgen
 
 
 def render_level(level):
@@ -38,10 +38,12 @@ libtcod.console_set_custom_font(
 libtcod.console_init_root(const.SCREEN_WIDTH, const.SCREEN_HEIGHT, "FirstRogue")
 con = libtcod.console_new(const.SCREEN_WIDTH, const.SCREEN_HEIGHT)
 
+level = levelgen.main_gen_level_algorithm()
 player = Player.Player(con, 50, 20, '@', libtcod.white)
 
 while not libtcod.console_is_window_closed():
     # draw
+    render_level(level)
     player.draw()
     libtcod.console_blit(con, 0, 0, const.SCREEN_WIDTH, const.SCREEN_HEIGHT, 0, 0, 0)
 

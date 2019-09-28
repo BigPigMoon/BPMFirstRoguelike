@@ -6,7 +6,7 @@ import Constants as const
 
 def create_room(x, y):
     """Создает комнату с рандомными размерами.
-    
+
     return:
         Rect
     """
@@ -25,10 +25,10 @@ def create_room(x, y):
 def create_tonel(x, y, direct):
     """Создает горизонтальный или вертикальный тонель
        с рандомной шириной или высотой, с заданными координатами.
-       
+
     args:
         direct -- направление h|0 - горизонтальный, v|1 - вертикальный
-        
+
     return:
         Rect
     """

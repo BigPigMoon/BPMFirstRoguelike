@@ -1,7 +1,7 @@
 import libtcodpy as libtcod
 
-import MakeObject as make
-import ScanWall as scan
+import LevelGen.MakeObject as make
+import LevelGen.ScanWall as scan
 import Color as color
 import Constants as const
 import Tile as tile
@@ -21,7 +21,9 @@ def dig_tile(level, x, y):
 
 # TODO Копатель прямоугольника
 def dig_rect(level, rect):
-    pass
+    for y in range(min(rect.y1, rect.y2), max(rect.y1, rect.y2)):
+        for x in range(min(rect.x1, rect.x2), max(rect.x1, rect.x2)):
+            dig_tile(level, x, y)
 
 #TODO главный алгоритм генерации уровня
 def main_gen_level_algorithm():
