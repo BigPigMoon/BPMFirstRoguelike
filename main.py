@@ -39,9 +39,11 @@ libtcod.console_init_root(const.SCREEN_WIDTH, const.SCREEN_HEIGHT, "FirstRogue")
 con = libtcod.console_new(const.SCREEN_WIDTH, const.SCREEN_HEIGHT)
 
 level = levelgen.main_gen_level_algorithm()
-player = Player.Player(con, 50, 20, '@', libtcod.white)
+player = Player.Player(con, 59, 25, '@', libtcod.white)
 
 while not libtcod.console_is_window_closed():
+    level = levelgen.main_gen_level_algorithm()
+    player.set_map(level)
     # draw
     render_level(level)
     player.draw()

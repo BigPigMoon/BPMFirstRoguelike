@@ -2,7 +2,10 @@ def scan_up(coords, depth, level):
     y = coords[1]
     for x in coords[0]:
         for yd in range(1, depth):
-            if not level[x][y-yd].blocked:
+            try:
+                if not level[x][y-yd].blocked:
+                    return False
+            except IndexError:
                 return False
     return True
 
@@ -11,7 +14,10 @@ def scan_down(coords, depth, level):
     y = coords[1]
     for x in coords[0]:
         for yd in range(1, depth):
-            if not level[x][y+yd].blocked:
+            try:
+                if not level[x][y+yd].blocked:
+                    return False
+            except IndexError:
                 return False
     return True
 
@@ -20,7 +26,10 @@ def scan_left(coords, depth, level):
     x = coords[0]
     for y in coords[1]:
         for xd in range(1, depth):
-            if not level[x-xd][y].blocked:
+            try:
+                if not level[x-xd][y].blocked:
+                    return False
+            except IndexError:
                 return False
     return True
 
@@ -29,7 +38,10 @@ def scan_right(coords, depth, level):
     x = coords[0]
     for y in coords[1]:
         for xd in range(1, depth):
-            if not level[x+xd][y].blocked:
+            try:
+                if not level[x+xd][y].blocked:
+                    return False
+            except IndexError:
                 return False
     return True
 
@@ -93,6 +105,7 @@ def scan_wall(direct, coords, depth, level):
           |
           3
     """
+    print(coords)
     if coords is not None:
         if direct == "UP" or direct == 1:
             scan_up(coords, depth, level)

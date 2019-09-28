@@ -2,11 +2,12 @@ import libtcodpy as libtcod
 
 
 class Rect:
-    def __init__(self, x, y, w, h):
+    def __init__(self, x, y, w, h, type=None):
         self.x1 = x
         self.y1 = y
         self.x2 = w + x
         self.y2 = h + y
+        self.type = type
 
     def intersect(self, other):
         """Проверка исключений."""
