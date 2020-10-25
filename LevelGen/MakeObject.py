@@ -4,19 +4,27 @@ import Rect
 import Constants as const
 
 
-def create_room(x, y):
+def create_room():
     """Создает комнату с рандомными размерами.
 
     return:
         Rect
     """
     rnd = 0
+
     w = libtcod.random_get_int(
             rnd, const.MIN_ROOM_WIDTH, const.MAX_ROOM_WIDTH
-        )
+    )
     h = libtcod.random_get_int(
             rnd, const.MIN_ROOM_HEIGHT, const.MAX_ROOM_HEIGHT
-        )
+    )
+    x = libtcod.random_get_int(
+        rnd, 1, const.MAP_WIDTH - w - 1
+    )
+    y = libtcod.random_get_int(
+        rnd, 1, const.MAP_HEIGHT - h -1
+    )
+
     room = Rect.Rect(x, y, w, h, "room")
     return room
 

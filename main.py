@@ -37,12 +37,11 @@ libtcod.console_set_custom_font(
 
 libtcod.console_init_root(const.SCREEN_WIDTH, const.SCREEN_HEIGHT, "FirstRogue")
 con = libtcod.console_new(const.SCREEN_WIDTH, const.SCREEN_HEIGHT)
-
 level = levelgen.main_gen_level_algorithm()
+
 player = Player.Player(con, 59, 25, '@', libtcod.white)
 
 while not libtcod.console_is_window_closed():
-    level = levelgen.main_gen_level_algorithm()
     player.set_map(level)
     # draw
     render_level(level)
@@ -57,3 +56,6 @@ while not libtcod.console_is_window_closed():
     exit = event.handle_key(player)
     if exit is True:
         break
+    if exit == 2:
+        level = levelgen.main_gen_level_algorithm()
+
